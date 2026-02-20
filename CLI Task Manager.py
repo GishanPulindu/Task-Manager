@@ -4,7 +4,7 @@ print("---Welcome To My Task Manager---")
 print("""Choose from below commands to run
 add    - To create a task
 view   - To view all tasks
-comp   - To update a task
+up     - To update a task
 del    - To delete a task
 exit   - to exit the program""")
 
@@ -50,15 +50,26 @@ def view_task():
     return
 
 
-def complete_task(u):
+def update_task(u):
     found = False
     with open("Task.json", "r") as f3:
         data = json.load(f3)
         for j in data:
             if j["id"] == u:
-                j["completed"] = True
-                found = True
-                break
+                print("""Choose from following
+                title    - To update title
+                done     - To complete a task""")
+
+                update = input("Update title or complete task : ")
+                if update.lower() == "title":
+                    new_title = input("Enter new title: ")
+                    j["title"] = new_title
+                    found = True
+                elif update.lower() == "done":
+                    j["completed"] = True
+                    found = True
+                else:
+                    print("Enter a valid update command!")
         if found:
             print("Task updated successfully!")
         else:
@@ -96,11 +107,11 @@ while True:
             print("Task title cannot be blank!")
     elif command.lower() == "view":
         view_task()
-    elif command.lower() == "comp":
+    elif command.lower() == "up":
         try:
             unique = int(input("Enter task id: "))
             if unique:
-                complete_task(unique)
+                update_task(unique)
             else:
                 print("Entering a task id is mandatory!")
         except ValueError:
