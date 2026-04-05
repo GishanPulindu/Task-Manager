@@ -1,29 +1,5 @@
 import json
 
-print("---Welcome To My Task Manager---")
-print("""Choose from below commands to run
-add    - To create a task
-view   - To view all tasks
-up     - To update a task
-del    - To delete a task
-exit   - to exit the program""")
-
-
-try:
-    with open("Task.json", "r") as f0:
-        tasks = json.load(f0)
-        if tasks:
-            print("--Available Tasks--")
-            for i in tasks:
-                print(i)
-        else:
-            print("No tasks yet.")
-except FileNotFoundError:
-    with open("Task.json", "w") as f0:
-        add = []
-        json.dump(add, f0, indent=4)
-
-
 def create_task(t):
     task = {}
     with open("Task.json", "r") as f1:
@@ -96,36 +72,62 @@ def del_task(u):
         json.dump(data, f6, indent=4)
     return
 
+def cli_run():
+    print("---Welcome To My Task Manager---")
+    print("""Choose from below commands to run
+    add    - To create a task
+    view   - To view all tasks
+    up     - To update a task
+    del    - To delete a task
+    exit   - to exit the program""")
 
-while True:
-    command = input("Enter a command to run: ")
-    if command.lower() == "add":
-        title = input("Add a title for the task: ")
-        if title:
-            create_task(title)
+    try:
+        with open("Task.json", "r") as f0:
+            tasks = json.load(f0)
+            if tasks:
+                print("--Available Tasks--")
+                for i in tasks:
+                    print(i)
+            else:
+                print("No tasks yet.")
+    except FileNotFoundError:
+        with open("Task.json", "w") as f0:
+            add = []
+            json.dump(add, f0, indent=4)
+
+    while True:
+        command = input("Enter a command to run: ")
+        if command.lower() == "add":
+            title = input("Add a title for the task: ")
+            if title:
+                create_task(title)
+            else:
+                print("Task title cannot be blank!")
+        elif command.lower() == "view":
+            view_task()
+        elif command.lower() == "up":
+            try:
+                unique = int(input("Enter task id: "))
+                if unique:
+                    update_task(unique)
+                else:
+                    print("Entering a task id is mandatory!")
+            except ValueError:
+                print("Enter a valid number!")
+        elif command.lower() == "del":
+            try:
+                unique = int(input("Enter task id: "))
+                if unique:
+                    del_task(unique)
+                else:
+                    print("Entering a task id is mandatory!")
+            except ValueError:
+                print("Enter a valid number!")
+        elif command.lower() == "exit":
+            break
         else:
-            print("Task title cannot be blank!")
-    elif command.lower() == "view":
-        view_task()
-    elif command.lower() == "up":
-        try:
-            unique = int(input("Enter task id: "))
-            if unique:
-                update_task(unique)
-            else:
-                print("Entering a task id is mandatory!")
-        except ValueError:
-            print("Enter a valid number!")
-    elif command.lower() == "del":
-        try:
-            unique = int(input("Enter task id: "))
-            if unique:
-                del_task(unique)
-            else:
-                print("Entering a task id is mandatory!")
-        except ValueError:
-            print("Enter a valid number!")
-    elif command.lower() == "exit":
-        break
-    else:
-        print("Enter a valid Command!")
+            print("Enter a valid Command!")
+
+if __name__ == "__main__":
+    cli_run()
+
